@@ -1,0 +1,4 @@
+output/*.zip
+Wynncraft 2.0
+*.zip
+!configs/**/*.zip

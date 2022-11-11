@@ -1,0 +1,50 @@
+name: Publish Pre Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      release_id: ${{ steps.release.outputs.id }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install conventional-changelog-conventionalcommits
+
+      - name: Create changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.17.0
+        with:
+          github-token: ${{ secrets.PRIVATE_TOKEN }}
+          git-user-name: 'WynntilsBot'
+          git-user-email: 'admin@wynntils.com'
+          pre-commit: ./.github/.pre-commit.js
+          config-file-path: ./.github/.config.js
+          skip-version-file: true
+          skip-git-pull: true
+          pre-release: true
+
+      - name: Create release
+        if: ${{ steps.changelog.outputs.skipped != 'true' }}
+        id: release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: true
+          prerelease: true
