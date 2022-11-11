@@ -33,8 +33,6 @@ jobs:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
           git-user-email: 'admin@wynntils.com'
-          pre-commit: ./.github/.pre-commit.js
-          config-file-path: ./.github/.config.js
           skip-version-file: true
           skip-git-pull: true
           pre-release: true

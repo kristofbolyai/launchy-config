@@ -2,3 +2,9 @@ output/*.zip
 Wynncraft 2.0
 *.zip
 !configs/**/*.zip
+
+
+# Files generated during github actions
+node_modules
+package-lock.json
+package.json
