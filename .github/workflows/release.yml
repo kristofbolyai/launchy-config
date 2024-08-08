@@ -1,4 +1,4 @@
-name: Publish Pre Release
+name: Publish Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   changelog:
-    name: Generate Changelog
+    name: Generate Changelog & Publish Release
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.changelog.outputs.tag }}
@@ -16,33 +16,52 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
       release_id: ${{ steps.release.outputs.id }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 16
-      - run: npm install conventional-changelog-conventionalcommits
+      - run: |
+          npm install conventional-changelog-conventionalcommits@7.0.2
+          npm install conventional-recommended-bump@9.0.0
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v3.17.0
+        uses: TriPSs/conventional-changelog-action@v5.2.1
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
           git-user-email: 'admin@wynntils.com'
           skip-version-file: true
           skip-git-pull: true
-          pre-release: true
+          pre-release: false
+          release-count: 5
+
+      - name: Generate the output files
+        run: |
+          chmod +x ./zip.sh
+          ./zip.sh
+
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: |
+            **/output/libs/*.zip
+          if-no-files-found: error
+          overwrite: true
 
       - name: Create release
         if: ${{ steps.changelog.outputs.skipped != 'true' }}
         id: release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.changelog }}
-          draft: true
-          prerelease: true
+          draft: false
+          prerelease: false
+          files: |
+            **/output/libs/*.zip
