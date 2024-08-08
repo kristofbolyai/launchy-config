@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 # This script is used to zip the contents of the folders of each folder in the configs folder
 
 # Get the configs folder
@@ -13,10 +13,10 @@ for config in $CONFIGS; do
   # if zip file does not exist
   if [ ! -f "output/$FOLDER_NAME.zip" ]; then
     # Change directory to the folder
-    cd "$config"
+    cd "$config" || exit
 
     # Zip the contents of the folder
-    zip -r "../../output/$FOLDER_NAME.zip" * -x .DS_Store
+    zip -r "../../output/$FOLDER_NAME.zip" -- * -x .DS_Store
 
     # Change directory back to the root
     cd ../..
