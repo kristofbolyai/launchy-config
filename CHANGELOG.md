@@ -1,4 +1,9 @@
-## [0.0.1-rc.1](https://github.com/Wynntils/launchy-config/compare/v0.0.1-rc.0...v0.0.1-rc.1) (2024-08-08)
+# [0.1.0](https://github.com/Wynntils/launchy-config/compare/v0.0.1-rc.0...v0.1.0) (2024-08-08)
+
+
+### Bug Fixes
+
+* Fix release Github Actions not working (and being half done) ([#3](https://github.com/Wynntils/launchy-config/issues/3)) ([86e3484](https://github.com/Wynntils/launchy-config/commit/86e34847a20a1f0272bcc336c454be53fb32ef3e))
 
 
 ### Features
