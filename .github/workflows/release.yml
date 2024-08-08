@@ -49,8 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: output
-          path: |
-            **/output/libs/*.zip
+          path: output/*.zip
           if-no-files-found: error
           overwrite: true
 
@@ -63,5 +62,4 @@ jobs:
           body: ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
-          files: |
-            **/output/libs/*.zip
+          files: output/*.zip

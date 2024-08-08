@@ -22,3 +22,6 @@ for config in $CONFIGS; do
     cd ../..
   fi
 done
+
+# List the contents of the output folder
+ls -l output
